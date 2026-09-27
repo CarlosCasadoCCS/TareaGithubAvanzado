@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - develop
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Añadir feature al README
+        run: |
+          echo "Añadida feature: ${{ github.head_ref || github.ref_name }}" >> README.md
+
+      - name: Guardar README
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add README.md
+          git commit -m "docs: añadir feature al README" || echo "Sin cambios"
+          git push
+
+  job2:
+    needs: job1
+    runs-on: self-hosted
+
+    steps:
+      - name: Comparar secret con variable local
+        env:
+          TOKEN: ${{ secrets.DEV_TOKEN }}
+        shell: powershell
+        run: |
+          if ($env:TOKEN -eq $env:LOCAL_DEV_TOKEN) {
+            Write-Host "Coinciden "
+          } else {
+            Write-Host "No coinciden "
+            exit 1
+          }

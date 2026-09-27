@@ -16,6 +16,7 @@ permissions:
 jobs:
   job1:
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
 
     steps:
       - name: Descargar repositorio
@@ -27,7 +28,7 @@ jobs:
           NEW_VERSION=$((VERSION + 1))
           DATE=$(date '+%Y-%m-%d %H:%M:%S')
 
-          sed -i "s/AppVersion-$VERSION/AppVersion-$NEW_VERSION - $DATE/" README.md
+          sed -i "s/AppVersion-$VERSION.*/AppVersion-$NEW_VERSION - $DATE/" README.md
 
       - name: Guardar README
         run: |
@@ -39,6 +40,7 @@ jobs:
 
   job2:
     needs: job1
+    if: needs.job1.result == 'success'
     runs-on: self-hosted
 
     steps:

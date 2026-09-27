@@ -1,4 +1,4 @@
-AppVersion-1 - 2026-09-27 21:16:21
+AppVersion-2 - 2026-09-27 22:06:17
 Añadida feature: develop
 
 Añadida feature: develop

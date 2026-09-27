@@ -46,10 +46,10 @@ jobs:
     steps:
       - name: Comparar secret con variable local
         env:
-          TOKEN: ${{ secrets.PROD_TOKEN }}
+          TOKEN: ${{ secrets.DEV_TOKEN }}
         shell: powershell
         run: |
-          if ($env:TOKEN -eq $env:LOCAL_PROD_TOKEN) {
+          if ($env:TOKEN -eq $env:LOCAL_DEV_TOKEN) {
             Write-Host "Coinciden "
           } else {
             Write-Host "No coinciden "
